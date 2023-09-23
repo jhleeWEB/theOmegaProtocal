@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { BackTop } from 'antd';
 import { ToastContainer } from 'react-toastify';
 import Router from './Router';
@@ -35,12 +35,12 @@ export default function App() {
         autoClose={5000}
         pauseOnHover={true}
       />
-      <HashRouter>
+      <BrowserRouter>
         <ScrollToTop>
           <BackTop />
           <Router />
         </ScrollToTop>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeContext.Provider>
   );
 }

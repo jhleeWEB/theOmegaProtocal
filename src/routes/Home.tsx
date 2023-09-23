@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
 import ThemeToggleSwitch from '../components/ThemeToggleSwitch';
+import { useHistory } from 'react-router-dom';
 
 // This is example of styled-components
 const Container = styled.main`
@@ -20,25 +20,41 @@ const Content = styled.div`
   margin: 1rem 0;
 `;
 
+const PhaseButtonContainer = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+`;
+const PhaseButton = styled.button`
+  height: 10rem;
+  width: 10rem;
+`;
+
 export default function Home() {
-  useEffect(() => {
-    toast('🦄 Welcome to React TypeScript Boilerplate!');
-  }, []);
+  const history = useHistory();
+
+  const handleOnPhaseButtonClick = (e: any, path?: string) => {
+    history.push(path);
+  };
 
   return (
     <Container className="App">
       <ThemeToggleSwitch />
       <Content>
-        React
+        절 오메가 프로토콜
         <br />
-        TypeScript
+        5페이즈: 시그마
         <br />
-        styled-components
-        <br />
-        Ant Design
-        <br />
-        Boilerplate
+        징맨 시뮬레이션
       </Content>
+      <PhaseButtonContainer>
+        <PhaseButton onClick={(e) => handleOnPhaseButtonClick(e, '/sigma')}>
+          시그마(Sigma)
+        </PhaseButton>
+        <PhaseButton onClick={(e) => handleOnPhaseButtonClick(e, '/omega')}>
+          오메가(Omega)
+        </PhaseButton>
+      </PhaseButtonContainer>
     </Container>
   );
 }
