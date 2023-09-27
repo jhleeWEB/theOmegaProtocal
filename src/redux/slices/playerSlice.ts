@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export type Debuff = 'dynamis' | 'dice1' | 'dice2';
+export type Debuff =
+  | 'dynamis'
+  | 'hellwallFar'
+  | 'hellwallNear'
+  | 'dice1'
+  | 'dice2';
 export type Job = 'pld' | 'war' | 'wht' | 'sch' | 'nin' | 'rpr' | 'mch' | 'sum';
 
 export interface Player {
