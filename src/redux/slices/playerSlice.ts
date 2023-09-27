@@ -70,10 +70,20 @@ export const partySlice = createSlice({
       const { target, debuff } = action.payload;
       state.member[target].debuffs.push(debuff);
     },
+    removeDebuff: (
+      state,
+      action: PayloadAction<{ debuff: Debuff; target: number }>,
+    ) => {
+      const { target, debuff } = action.payload;
+      const index = state.member[target].debuffs.indexOf(debuff);
+      if (state.member[target].debuffs.length > 0) {
+        state.member[target].debuffs.splice(index, 1);
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addDebuff } = partySlice.actions;
+export const { addDebuff, removeDebuff } = partySlice.actions;
 
 export default partySlice.reducer;

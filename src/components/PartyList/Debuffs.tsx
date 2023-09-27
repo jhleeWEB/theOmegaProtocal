@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Debuff } from '../../redux/slices/playerSlice';
 
@@ -8,16 +8,30 @@ const Icon = ({ debuff }) => {
 
 const Container = styled.div``;
 
+const getStackedDebuffs = (debuffs: Debuff[]) => {
+  const stacked = debuffs.reduce(function (prev, curr) {
+    prev[curr] = (prev[curr] || 0) + 1;
+    return prev;
+  }, {});
+  return stacked;
+};
+
 interface Props {
   debuffs: Debuff[];
 }
 
 const Debuffs = ({ debuffs }: Props) => {
+  const stacked = getStackedDebuffs(debuffs);
+  const dynamisSrc = `/debuffIcons/dynamis${
+    stacked['dynamis'] ? stacked['dynamis'] : ''
+  }.png`;
+  const dice1Src = `/debuffIcons/dice1.png`;
+  const dice2Src = `/debuffIcons/dice2.png`;
   return (
     <Container>
-      {debuffs.map((debuff) => (
-        <div>{debuff}</div>
-      ))}
+      {stacked['dynamis'] > 0 && <img width="30px" src={dynamisSrc} />}
+      {stacked['dice1'] > 0 && <img width="30px" src={dice1Src} />}
+      {stacked['dice2'] > 0 && <img width="30px" src={dice2Src} />}
     </Container>
   );
 };

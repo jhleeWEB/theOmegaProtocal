@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
-  margin-left: 150px;
+  position: absolute;
+  left: 440px;
 `;
 
 const Marks = styled.div`
@@ -119,6 +120,7 @@ const Macros = () => {
           buttonStatus.map((status, i) => {
             return (
               <Mark
+                key={`macro_${i}_${status}`}
                 index={i}
                 markType="markings"
                 status={buttonStatus}
