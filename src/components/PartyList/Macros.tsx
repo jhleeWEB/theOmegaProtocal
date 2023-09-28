@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { RootState } from '../../redux/store';
+import {
+  chainPlayer,
+  resetPlayer,
+  unChainPlayer,
+} from '../../redux/slices/playerSlice';
 
 const Container = styled.div`
   display: flex;
@@ -35,83 +42,101 @@ const MarkContainer = styled.div`
 
 type MarkProps = {
   index: number;
-  status: boolean[];
-  markType: 'markings' | 'reset';
-  resetHandler?: () => void;
+  status: ButtonStatus[];
   setStatus?: any;
 };
 
-const Mark = ({
-  index,
-  status,
-  markType,
-  resetHandler,
-  setStatus,
-}: MarkProps) => {
+type TButton = 'chain' | 'number';
+
+const Mark = ({ index, status, setStatus }: MarkProps) => {
   const chainIconSrc = `/macroIcons/${
-    status[index] ? 'disable' : 'chain'
+    status[index].number || status[index].chain ? 'disable' : 'chain'
   }Marker.png`;
   const numberIconSrc = `/macroIcons/${
-    status[index] ? 'disable' : 'number'
+    status[index].number || status[index].chain ? 'disable' : 'number'
   }Marker.png`;
-  const resetIconSrc = `/macroIcons/resetMarker.png`;
 
-  const onClickHandler = () => {
-    if (setStatus !== undefined) {
-      const newStatus = status.map((n, i) => (i === index ? !n : n));
-      setStatus(newStatus);
+  const onClickHandler = (clickBtnType: TButton, index?: number) => {
+    const newStatus = status.map((n, i) => {
+      const temp = { ...n };
+      if (i === index) {
+        temp[clickBtnType] = !n[clickBtnType];
+      } else {
+        temp[clickBtnType] = n[clickBtnType];
+      }
+      return temp;
+    });
+
+    if (clickBtnType === 'chain' && index) {
+      newStatus[index].chainNum = newStatus.filter((n) => n.chain).length;
     }
+    setStatus(newStatus);
   };
 
   return (
     <MarkContainer>
-      {markType === 'markings' ? (
-        <>
-          <Button
-            onClick={onClickHandler}
-            isClicked={status[index]}
-            color="lightcoral"
-          >
-            <img width="30px" src={chainIconSrc} />
-          </Button>
-          <Button
-            onClick={onClickHandler}
-            isClicked={status[index]}
-            color="lightyellow"
-          >
-            <img width="30px" src={numberIconSrc} />
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button onClick={resetHandler} isClicked={false} color="blue">
-            <img width="30px" src={resetIconSrc} />
-          </Button>
-        </>
-      )}
+      <Button
+        onClick={() => onClickHandler('chain', index)}
+        isClicked={status[index].chain}
+        color="lightcoral"
+      >
+        <img width="30px" src={chainIconSrc} />
+      </Button>
+      <Button
+        onClick={() => onClickHandler('number', index)}
+        isClicked={status[index].number}
+        color="lightyellow"
+      >
+        <img width="30px" src={numberIconSrc} />
+      </Button>
     </MarkContainer>
   );
 };
 
+const ResetMark = ({ resetHandler }) => {
+  const resetIconSrc = `/macroIcons/resetMarker.png`;
+  return (
+    <MarkContainer>
+      <Button onClick={resetHandler} isClicked={false} color="blue">
+        <img width="30px" src={resetIconSrc} />
+      </Button>
+    </MarkContainer>
+  );
+};
+
+interface ButtonStatus {
+  chainNum: undefined | number;
+  chain: boolean;
+  number: boolean;
+}
 const initialButtonStatus = [
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
+  { chainNum: undefined, chain: false, number: false },
 ];
 
 const Macros = () => {
+  const dispatch = useDispatch();
+  const { member } = useSelector((state: RootState) => state.party);
   const [buttonStatus, setButtonStatus] = useState(initialButtonStatus);
-
   const resetHandler = () => {
     setButtonStatus(initialButtonStatus);
   };
 
-  useEffect(() => {}, [buttonStatus]);
+  useEffect(() => {
+    const temp = member.map((n, i) => ({
+      ...n,
+      isChained: buttonStatus[i].chain,
+      chainNumber: buttonStatus[i].chainNum,
+    }));
+    console.log(temp);
+    dispatch(resetPlayer({ players: temp }));
+  }, [buttonStatus]);
 
   return (
     <Container>
@@ -120,20 +145,14 @@ const Macros = () => {
           buttonStatus.map((status, i) => {
             return (
               <Mark
-                key={`macro_${i}_${status}`}
+                key={`macro_${i}_${status.chain}`}
                 index={i}
-                markType="markings"
                 status={buttonStatus}
                 setStatus={setButtonStatus}
               />
             );
           })}
-        <Mark
-          index={0}
-          status={[]}
-          markType="reset"
-          resetHandler={resetHandler}
-        />
+        <ResetMark resetHandler={resetHandler} />
       </Marks>
     </Container>
   );

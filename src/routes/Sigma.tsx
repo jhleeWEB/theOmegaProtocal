@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PartyList from '../components/PartyList';
 import Macros from '../components/PartyList/Macros';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import {
   Debuff,
@@ -32,6 +32,7 @@ export default function Sigma() {
 
   const applyDeltaDynamis = () => {
     const debuffedPlayers = debuffGenerator.generateRandomDynamis(party.member);
+    console.log(debuffedPlayers);
     debuffedPlayers.forEach((n) => {
       const target = party.member.indexOf(n);
       const debuff = 'dynamis';
@@ -44,8 +45,10 @@ export default function Sigma() {
     );
     const targetOne = party.member.indexOf(debuffedPlayers[0]);
     const targetTwo = party.member.indexOf(debuffedPlayers[1]);
-    dispatch(addDebuff({ debuff: 'hellwallNear', target: targetOne }));
-    dispatch(addDebuff({ debuff: 'hellwallFar', target: targetTwo }));
+    batch(() => {
+      dispatch(addDebuff({ debuff: 'hellwallNear', target: targetOne }));
+      dispatch(addDebuff({ debuff: 'hellwallFar', target: targetTwo }));
+    });
   };
 
   return (

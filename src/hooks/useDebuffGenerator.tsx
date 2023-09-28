@@ -4,7 +4,7 @@ import { Player } from '../redux/slices/playerSlice';
 const useDebuffGenerator = () => {
   const generateRandomDynamis = (party: Player[]) => {
     const dynamisTargets = new Array();
-    const chooser = randomNoRepeats(party);
+    const chooser = randomNoRepeats(party.filter((n) => !n.isChained));
     for (let i = 0; i < 6; i++) {
       dynamisTargets.push(chooser());
     }
