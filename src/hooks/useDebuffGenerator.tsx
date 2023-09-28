@@ -45,13 +45,14 @@ const useDebuffGenerator = () => {
 
   const generateRandomHellWall = (party: Player[], phase: TPhase) => {
     const hellWallTargets = new Array();
-    const debuffCount = phase === 'omega1' || 'omega1' ? 4 : 2;
+    const debuffCount = phase === 'omega1' ? 4 : 2;
     const chooser = randomNoRepeats(getHellwallTargetPlayers(party, phase));
     for (let i = 0; i < debuffCount; i++) {
       hellWallTargets.push(chooser());
     }
     return hellWallTargets;
   };
+
   const generateRandomDice = (party: Player[]) => {
     const diceTarget = new Array();
     const chooser = randomNoRepeats(
