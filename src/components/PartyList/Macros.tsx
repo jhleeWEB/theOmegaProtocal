@@ -24,6 +24,7 @@ const Button = styled.button<{ isClicked?: boolean; color: string }>`
   min-width: 50px;
   margin: 2px;
   background: rgba(255, 255, 255, 0.16);
+  background-color: ${(props) => props.isClicked && props.color};
   border-radius: 10px;
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(6.3px);
@@ -78,7 +79,7 @@ const Mark = ({ index, status, setStatus }: MarkProps) => {
       <Button
         onClick={() => onClickHandler('chain', index)}
         isClicked={status[index].chain}
-        color="lightcoral"
+        color="purple"
       >
         <img width="30px" src={chainIconSrc} />
       </Button>
@@ -105,19 +106,19 @@ const ResetMark = ({ resetHandler }) => {
 };
 
 interface ButtonStatus {
-  chainNum: undefined | number;
+  chainNum: number;
   chain: boolean;
   number: boolean;
 }
 const initialButtonStatus = [
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
-  { chainNum: undefined, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
+  { chainNum: 0, chain: false, number: false },
 ];
 
 const Macros = () => {

@@ -8,14 +8,21 @@ import {
   Debuff,
   Player,
   addDebuff,
+  removeAllHellwallDebuffs,
   removeDebuff,
 } from '../redux/slices/playerSlice';
-import useDebuffGenerator from '../hooks/useDebuffGenerator';
+import useDebuffGenerator, { TPhase } from '../hooks/useDebuffGenerator';
 
 const Container = styled.main``;
 
 const PartyContainer = styled.div`
   display: flex;
+`;
+
+const ControlButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100px;
 `;
 
 export default function Sigma() {
@@ -30,25 +37,83 @@ export default function Sigma() {
     dispatch(removeDebuff({ debuff: debuff, target: 4 }));
   };
 
+  const applyDiceDebuffs = () => {
+    const dicePlayers = debuffGenerator.generateRandomDice(
+      party.member,
+    ) as Player[];
+    batch(() => {
+      const farTargets = dicePlayers.filter((n) =>
+        n.debuffs.includes('hellwallFar'),
+      );
+      const nearTargets = dicePlayers.filter((n) =>
+        n.debuffs.includes('hellwallNear'),
+      );
+      farTargets.forEach((n, i) => {
+        const target = party.member.indexOf(n);
+        const debuff = i % 2 == 0 ? 'dice1' : 'dice2';
+        dispatch(addDebuff({ debuff, target }));
+      });
+      nearTargets.forEach((n, i) => {
+        const target = party.member.indexOf(n);
+        const debuff = i % 2 == 0 ? 'dice1' : 'dice2';
+        dispatch(addDebuff({ debuff, target }));
+      });
+    });
+  };
+
   const applyDeltaDynamis = () => {
-    const debuffedPlayers = debuffGenerator.generateRandomDynamis(party.member);
-    console.log(debuffedPlayers);
+    const debuffedPlayers = debuffGenerator.generateRandomDynamis(
+      party.member,
+      'delta',
+    );
     debuffedPlayers.forEach((n) => {
       const target = party.member.indexOf(n);
       const debuff = 'dynamis';
       dispatch(addDebuff({ debuff, target }));
     });
   };
-  const applyDeltaHellwall = () => {
+  const applySigmaDynamis = () => {
+    const debuffedPlayers = debuffGenerator.generateRandomDynamis(
+      party.member,
+      'sigma',
+    );
+    batch(() => {
+      debuffedPlayers.forEach((n) => {
+        const target = party.member.indexOf(n);
+        const debuff = 'dynamis';
+        dispatch(addDebuff({ debuff, target }));
+      });
+    });
+  };
+  const applyOmega1Dynamis = () => {
+    const debuffedPlayers = debuffGenerator.generateRandomDynamis(
+      party.member,
+      'omega1',
+    );
+    batch(() => {
+      debuffedPlayers.forEach((n) => {
+        const target = party.member.indexOf(n);
+        const debuff = 'dynamis';
+        dispatch(addDebuff({ debuff, target }));
+      });
+    });
+  };
+
+  const applyHellwall = (phase: TPhase) => {
     const debuffedPlayers = debuffGenerator.generateRandomHellWall(
       party.member,
+      phase,
     );
-    const targetOne = party.member.indexOf(debuffedPlayers[0]);
-    const targetTwo = party.member.indexOf(debuffedPlayers[1]);
     batch(() => {
-      dispatch(addDebuff({ debuff: 'hellwallNear', target: targetOne }));
-      dispatch(addDebuff({ debuff: 'hellwallFar', target: targetTwo }));
+      debuffedPlayers.forEach((n, i) => {
+        const target = party.member.indexOf(n);
+        const debuff = i % 2 == 0 ? 'hellwallFar' : 'hellwallNear';
+        dispatch(addDebuff({ debuff, target }));
+      });
     });
+  };
+  const removeHellwall = () => {
+    dispatch(removeAllHellwallDebuffs());
   };
 
   return (
@@ -58,15 +123,16 @@ export default function Sigma() {
         <PartyList />
         <Macros />
       </PartyContainer>
-      <div>
-        <button onClick={applyDeltaDynamis}>Add Dynamis Debuff</button>
-        <button onClick={applyDeltaHellwall}>Add Hell Wall</button>
-        <button onClick={() => addDebuffHandler('dice1')}>
-          Add Dice1 Debugg
+      <ControlButtonContainer>
+        <button onClick={applyDeltaDynamis}>Add Delta Dynamis Debuff</button>
+        <button onClick={applySigmaDynamis}>Add Sigma Dynamis Debuff</button>
+        <button onClick={applyOmega1Dynamis}>Add Omega1 Dynamis Debuff</button>
+        <button onClick={() => applyHellwall('delta')}>Add Hell Wall</button>
+        <button onClick={() => applyHellwall('omega1')}>
+          Add Omega Hell Wall
         </button>
-        <button onClick={() => addDebuffHandler('dice2')}>
-          Add Dice2 Debugg
-        </button>
+        <button onClick={removeHellwall}>remove hellwall Debuff</button>
+        <button onClick={applyDiceDebuffs}>Add Dice Debuff</button>
         <button onClick={() => removeDebuffHandler('dynamis')}>
           Remove Dynamis Debugg
         </button>
@@ -77,7 +143,7 @@ export default function Sigma() {
           Remove Dice2 Debugg
         </button>
         <button>pause</button>
-      </div>
+      </ControlButtonContainer>
     </Container>
   );
 }
