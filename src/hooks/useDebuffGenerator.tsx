@@ -1,18 +1,16 @@
-import React from 'react';
-import { Player } from '../redux/slices/playerSlice';
-
-export type TPhase = 'delta' | 'sigma' | 'omega1' | 'omega2';
-
-const getHellwallTargetPlayers = (players: Player[], phase: TPhase) => {
-  switch (phase) {
-    case 'delta':
-    case 'sigma':
-    case 'omega1':
-    case 'omega2':
-    default:
-      return players;
-  }
-};
+import React, { useEffect } from 'react';
+import {
+  Debuff,
+  PartyListState,
+  Player,
+  addDebuff,
+  addMultipleDebuffs,
+  removeAllHellwallDebuffs,
+  removeDiceHellwallDebuffs,
+} from '../redux/slices/playerSlice';
+import { TPhase } from '../redux/slices/simulationSlice';
+import { batch, useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const getDynamisTargetPlayers = (players: Player[], phase: TPhase) => {
   switch (phase) {
@@ -26,46 +24,52 @@ const getDynamisTargetPlayers = (players: Player[], phase: TPhase) => {
     case 'omega2':
       return players.filter(
         (n) =>
+          n.chainNumber !== 0 &&
           n.chainNumber !== 1 &&
-          n.chainNumber !== 2 &&
           n.debuffs.filter((m) => m === 'dynamis').length < 3,
       );
   }
 };
 
 const useDebuffGenerator = () => {
-  const generateRandomDynamis = (party: Player[], phase: TPhase) => {
-    const dynamisTargets = new Array();
-    const chooser = randomNoRepeats(getDynamisTargetPlayers(party, phase));
-    for (let i = 0; i < 6; i++) {
-      dynamisTargets.push(chooser());
-    }
-    return dynamisTargets;
-  };
+  const dispatch = useDispatch();
+  const party = useSelector((state: RootState) => state.party);
 
-  const generateRandomHellWall = (party: Player[], phase: TPhase) => {
-    const hellWallTargets = new Array();
-    const debuffCount = phase === 'omega1' ? 4 : 2;
-    const chooser = randomNoRepeats(getHellwallTargetPlayers(party, phase));
-    for (let i = 0; i < debuffCount; i++) {
-      hellWallTargets.push(chooser());
-    }
-    return hellWallTargets;
-  };
+  useEffect(() => {}, [party.member]);
 
-  const generateRandomDice = (party: Player[]) => {
-    const diceTarget = new Array();
-    const chooser = randomNoRepeats(
-      party.filter(
+  const generateRandomDynamis = (phase: TPhase) => {
+    const dynamisTargets = party.member
+      .filter(
         (n) =>
           n.debuffs.includes('hellwallFar') ||
           n.debuffs.includes('hellwallNear'),
-      ),
-    );
+      )
+      .map((n) => {
+        return {
+          ...n,
+          debuffs: [],
+        };
+      });
+    const players = party.member
+      .filter(
+        (n) =>
+          !n.debuffs.includes('hellwallFar') &&
+          !n.debuffs.includes('hellwallNear'),
+      )
+      .map((n) => {
+        return {
+          ...n,
+          debuffs: [],
+        };
+      });
+    console.log('hellwall target', dynamisTargets);
+    console.log('pool', players);
+    const chooser = randomNoRepeats(getDynamisTargetPlayers(players, phase));
     for (let i = 0; i < 4; i++) {
-      diceTarget.push(chooser());
+      dynamisTargets.push(chooser());
     }
-    return diceTarget;
+
+    return dynamisTargets;
   };
 
   const randomNoRepeats = (array) => {
@@ -81,7 +85,79 @@ const useDebuffGenerator = () => {
     };
   };
 
-  return { generateRandomDice, generateRandomHellWall, generateRandomDynamis };
+  const applyDynamis = (phase: TPhase) => {
+    const debuffedPlayers = generateRandomDynamis(phase).map((n) => {
+      return {
+        ...n,
+        debuffs: [...n.debuffs, 'dynamis'],
+      };
+    }) as Player[];
+    batch(() => {
+      dispatch(addMultipleDebuffs({ targetPlayers: debuffedPlayers }));
+      dispatch(removeAllHellwallDebuffs());
+    });
+  };
+
+  const applyOmega1Dynamis = (delay = 0) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const debuffedPlayers = generateRandomDynamis('omega1').map((n) => {
+          return {
+            ...n,
+            debuffs: [...n.debuffs, 'dynamis'],
+          };
+        }) as Player[];
+        dispatch(addMultipleDebuffs({ targetPlayers: debuffedPlayers }));
+        resolve('resolve');
+      }, delay);
+    });
+  };
+
+  const generateRandomHellWall = (party: Player[], phase: TPhase) => {
+    const hellWallTargets = new Array();
+    const debuffCount = phase === 'omega1' ? 4 : 2;
+    const chooser = randomNoRepeats(party);
+    for (let i = 0; i < debuffCount; i++) {
+      hellWallTargets.push(chooser());
+    }
+    return hellWallTargets;
+  };
+
+  const applyHellwall = (phase: TPhase) => {
+    const targetPlayers = generateRandomHellWall(party.member, phase).map(
+      (n) => {
+        return { ...n, debuffs: [] };
+      },
+    ) as Player[];
+
+    const debuffedPlayers = targetPlayers.map((n, i) => {
+      const debuffs = [i % 2 == 0 ? 'hellwallFar' : 'hellwallNear'];
+      if (phase === 'omega1') {
+        debuffs.push(i % 2 == 0 ? 'dice1' : 'dice2');
+      }
+      return {
+        ...n,
+        debuffs: [...n.debuffs, ...(debuffs as Debuff[])],
+      };
+    });
+
+    dispatch(addMultipleDebuffs({ targetPlayers: debuffedPlayers }));
+  };
+
+  const removeHellwall = (diceNumber?: 'dice1' | 'dice2') => {
+    if (diceNumber !== undefined) {
+      dispatch(removeDiceHellwallDebuffs({ dice: diceNumber }));
+    } else {
+      dispatch(removeAllHellwallDebuffs());
+    }
+  };
+
+  return {
+    applyHellwall,
+    applyDynamis,
+    applyOmega1Dynamis,
+    removeHellwall,
+  };
 };
 
 export default useDebuffGenerator;

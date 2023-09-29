@@ -2,10 +2,6 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Debuff } from '../../redux/slices/playerSlice';
 
-const Icon = ({ debuff }) => {
-  return <div>{debuff}</div>;
-};
-
 const Container = styled.div``;
 
 const getStackedDebuffs = (debuffs: Debuff[]) => {

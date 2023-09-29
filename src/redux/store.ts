@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import partyReducer from './slices/playerSlice';
+import simulationReducer from './slices/simulationSlice';
 
 export const store = configureStore({
-  reducer: { party: partyReducer },
+  reducer: { party: partyReducer, simulation: simulationReducer },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../../redux/store';
-import {
-  chainPlayer,
-  resetPlayer,
-  unChainPlayer,
-} from '../../redux/slices/playerSlice';
+import { resetPlayer } from '../../redux/slices/playerSlice';
 
 const Container = styled.div`
   display: flex;
@@ -125,6 +121,7 @@ const Macros = () => {
   const dispatch = useDispatch();
   const { member } = useSelector((state: RootState) => state.party);
   const [buttonStatus, setButtonStatus] = useState(initialButtonStatus);
+
   const resetHandler = () => {
     setButtonStatus(initialButtonStatus);
   };
@@ -135,7 +132,6 @@ const Macros = () => {
       isChained: buttonStatus[i].chain,
       chainNumber: buttonStatus[i].chainNum,
     }));
-    console.log(temp);
     dispatch(resetPlayer({ players: temp }));
   }, [buttonStatus]);
 

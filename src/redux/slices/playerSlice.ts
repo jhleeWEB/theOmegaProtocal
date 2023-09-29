@@ -7,6 +7,7 @@ export type Debuff =
   | 'hellwallNear'
   | 'dice1'
   | 'dice2';
+
 export type Job = 'pld' | 'war' | 'wht' | 'sch' | 'nin' | 'rpr' | 'mch' | 'sum';
 
 export interface Player {
@@ -115,6 +116,22 @@ export const partySlice = createSlice({
         }
       });
     },
+    removeDiceHellwallDebuffs: (
+      state,
+      action: PayloadAction<{ dice: 'dice1' | 'dice2' }>,
+    ) => {
+      const { dice } = action.payload;
+      state.member.forEach((n, i) => {
+        const index1 = state.member[i].debuffs.indexOf('hellwallFar');
+        const index2 = state.member[i].debuffs.indexOf('hellwallNear');
+        if (n.debuffs.includes('hellwallFar') && n.debuffs.includes(dice)) {
+          state.member[i].debuffs.splice(index1, 1);
+        }
+        if (n.debuffs.includes('hellwallNear') && n.debuffs.includes(dice)) {
+          state.member[i].debuffs.splice(index2, 1);
+        }
+      });
+    },
     resetPlayer: (state, action: PayloadAction<{ players: Player[] }>) => {
       const { players } = action.payload;
       state.member = players;
@@ -127,14 +144,29 @@ export const partySlice = createSlice({
       const { target } = action.payload;
       state.member[target].isChained = false;
     },
+    addMultipleDebuffs: (
+      state,
+      action: PayloadAction<{ targetPlayers: Player[] }>,
+    ) => {
+      const { targetPlayers } = action.payload;
+      targetPlayers.forEach((n, i) => {
+        const target = state.member.findIndex((m) => m.name === n.name);
+        state.member[target].debuffs = [
+          ...n.debuffs,
+          ...state.member[target].debuffs,
+        ];
+      });
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
 export const {
   addDebuff,
+  addMultipleDebuffs,
   removeDebuff,
   removeAllHellwallDebuffs,
+  removeDiceHellwallDebuffs,
   chainPlayer,
   unChainPlayer,
   resetPlayer,
