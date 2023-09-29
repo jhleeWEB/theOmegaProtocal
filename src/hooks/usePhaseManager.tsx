@@ -10,23 +10,24 @@ type TPhaseStatus =
   | 'delta'
   | 'deltaHellwall'
   | 'sigma'
-  | 'sigmaHellwall';
+  | 'sigmaHellwall'
+  | 'omega1'
+  | 'omega1Hellwall'
+  | 'omega2'
+  | 'omega2Hellwall';
 
 const usePhaseManager = () => {
   const dispatch = useDispatch();
   const { simulation, party } = useSelector((state: RootState) => state);
-  const { name, order, delay, debuffs } = simulation.current.phase;
   const debuffGenerator = useDebuffGenerator();
   const { removeHellwall } = debuffGenerator;
   const [phaseStatus, setPhaseStatus] = useState<TPhaseStatus>('idle');
-  const [isDeltaStart, setIsDeltaStart] = useState(false);
-  const [isSigmaStart, setIsSigmaStart] = useState(false);
-  const [deltaTimeLeft, deltaCountdown] = useCountDown(5000);
-  const [deltaHellwallTimeLeft, deltaHellwallCountdown] = useCountDown(5000);
+  const [deltaTimeLeft, deltaCountdown] = useCountDown(2000);
+  const [deltaHellwallTimeLeft, deltaHellwallCountdown] = useCountDown(2000);
   const [sigmaTimeLeft, sigmaCountdown] = useCountDown(2000);
-  const [sigmaHellwallTimeLeft, sigmaHellwallCountdown] = useCountDown(2000);
-  const omega1CountDown = useCountDown(2000);
-  const omega2CountDown = useCountDown(2000);
+  const [sigmaHellwallTimeLeft, sigmaHellwallCountdown] = useCountDown(10000);
+  const [omega1TimeLeft, omega1Countdown] = useCountDown(2000);
+  const [omega1HellwallTimeLeft, omega1HellwallCountdown] = useCountDown(10000);
 
   useEffect(() => {
     if (deltaTimeLeft <= 0 && phaseStatus === 'delta') {
@@ -39,8 +40,8 @@ const usePhaseManager = () => {
   useEffect(() => {
     if (deltaHellwallTimeLeft <= 0 && phaseStatus === 'deltaHellwall') {
       debuffGenerator.applyDynamis('delta');
-      setPhaseStatus('sigma');
-      sigmaCountdown.start();
+      // setPhaseStatus('sigma');
+      // sigmaCountdown.start();
     }
   }, [deltaHellwallTimeLeft, phaseStatus]);
 
@@ -58,6 +59,20 @@ const usePhaseManager = () => {
     }
   }, [sigmaHellwallTimeLeft, phaseStatus]);
 
+  useEffect(() => {
+    if (omega1TimeLeft <= 0 && phaseStatus === 'omega1') {
+      debuffGenerator.applyHellwall('omega1');
+      setPhaseStatus('omega1Hellwall');
+      omega1HellwallCountdown.start();
+    }
+  }, [omega1TimeLeft, phaseStatus]);
+
+  useEffect(() => {
+    if (omega1HellwallTimeLeft <= 0 && phaseStatus === 'omega1Hellwall') {
+      debuffGenerator.applyDynamis('omega1');
+    }
+  }, [omega1HellwallTimeLeft, phaseStatus]);
+
   const startDeltaPhase = () => {
     setPhaseStatus('delta');
     deltaCountdown.start();
@@ -65,6 +80,10 @@ const usePhaseManager = () => {
   const startSigmaPhase = () => {
     setPhaseStatus('sigma');
     sigmaCountdown.start();
+  };
+  const startOmega1Phase = () => {
+    setPhaseStatus('omega1');
+    omega1Countdown.start();
   };
 
   // const startSigmaPhase = () => {
@@ -114,10 +133,17 @@ const usePhaseManager = () => {
   //   dispatch(nextPhase());
   // };
   return {
-    deltaTimeLeft,
-    deltaHellwallTimeLeft,
+    timer: {
+      deltaTimeLeft,
+      deltaHellwallTimeLeft,
+      sigmaTimeLeft,
+      sigmaHellwallTimeLeft,
+      omega1TimeLeft,
+      omega1HellwallTimeLeft,
+    },
     startDeltaPhase,
     startSigmaPhase,
+    startOmega1Phase,
     // startSigmaPhase,
     // startOmega1Phase,
     // startOmega2Phase,

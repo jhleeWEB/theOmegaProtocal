@@ -40,6 +40,9 @@ export default function Sigma() {
   const onClickSigma = () => {
     phaseManager.startSigmaPhase();
   };
+  const onClickOmega1 = () => {
+    phaseManager.startOmega1Phase();
+  };
   return (
     <Container>
       <PartyContainer>
@@ -49,9 +52,14 @@ export default function Sigma() {
       <ControlButtonContainer>
         <button onClick={onClickDelta}>Start Delta</button>
         <button onClick={onClickSigma}>Start Sigma</button>
+        <button onClick={onClickOmega1}>Start Omega1</button>
       </ControlButtonContainer>
-      <Timer>{phaseManager.deltaTimeLeft / 1000}</Timer>
-      <Timer>{phaseManager.deltaHellwallTimeLeft / 1000}</Timer>
+      <Timer>{phaseManager.timer.deltaTimeLeft / 1000}</Timer>
+      <Timer>{phaseManager.timer.deltaHellwallTimeLeft / 1000}</Timer>
+      <Timer>{phaseManager.timer.sigmaTimeLeft / 1000}</Timer>
+      <Timer>{phaseManager.timer.sigmaHellwallTimeLeft / 1000}</Timer>
+      <Timer>{phaseManager.timer.omega1TimeLeft / 1000}</Timer>
+      <Timer>{phaseManager.timer.omega1HellwallTimeLeft / 1000}</Timer>
     </Container>
   );
 }
