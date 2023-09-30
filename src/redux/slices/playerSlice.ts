@@ -15,70 +15,72 @@ export interface Player {
   job: Job;
   debuffs: Debuff[];
   isChained: boolean;
-  chainNumber: number;
+  isNumbered: boolean;
 }
 
 export interface PartyListState {
   member: Player[];
+  chainedIndexes: number[];
 }
 
 const initialState: PartyListState = {
+  chainedIndexes: [],
   member: [
     {
       job: 'pld',
       name: '재외국민',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'war',
       name: '세트메뉴',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'wht',
       name: '감자깎는토마토',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'sch',
       name: '유들',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'rpr',
       name: '깜쟝마리모',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'nin',
       name: '재규',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'mch',
       name: '악성마리모',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
     {
       job: 'sum',
       name: '찰떡돌',
       debuffs: [],
       isChained: false,
-      chainNumber: 0,
+      isNumbered: false,
     },
   ],
 };
@@ -106,13 +108,14 @@ export const partySlice = createSlice({
     },
     removeAllHellwallDebuffs: (state) => {
       state.member.forEach((n, i) => {
-        const index1 = state.member[i].debuffs.indexOf('hellwallFar');
-        const index2 = state.member[i].debuffs.indexOf('hellwallNear');
+        const hellwallFarIndex = state.member[i].debuffs.indexOf('hellwallFar');
+        const hellwallNearIndex =
+          state.member[i].debuffs.indexOf('hellwallNear');
         if (n.debuffs.includes('hellwallFar')) {
-          state.member[i].debuffs.splice(index1, 1);
+          state.member[i].debuffs.splice(hellwallFarIndex, 1);
         }
         if (n.debuffs.includes('hellwallNear')) {
-          state.member[i].debuffs.splice(index2, 1);
+          state.member[i].debuffs.splice(hellwallNearIndex, 1);
         }
       });
     },
@@ -122,13 +125,26 @@ export const partySlice = createSlice({
     ) => {
       const { dice } = action.payload;
       state.member.forEach((n, i) => {
-        const index1 = state.member[i].debuffs.indexOf('hellwallFar');
-        const index2 = state.member[i].debuffs.indexOf('hellwallNear');
+        const hellwallFarIndex = state.member[i].debuffs.indexOf('hellwallFar');
+        const hellwallNearIndex =
+          state.member[i].debuffs.indexOf('hellwallNear');
         if (n.debuffs.includes('hellwallFar') && n.debuffs.includes(dice)) {
-          state.member[i].debuffs.splice(index1, 1);
+          state.member[i].debuffs.splice(hellwallFarIndex, 1);
         }
         if (n.debuffs.includes('hellwallNear') && n.debuffs.includes(dice)) {
-          state.member[i].debuffs.splice(index2, 1);
+          state.member[i].debuffs.splice(hellwallNearIndex, 1);
+        }
+      });
+    },
+    removeDiceDebuffs: (
+      state,
+      action: PayloadAction<{ dice: 'dice1' | 'dice2' }>,
+    ) => {
+      const { dice } = action.payload;
+      state.member.forEach((n, i) => {
+        const diceIndex = state.member[i].debuffs.indexOf(dice);
+        if (n.debuffs.includes(dice) && n.debuffs.includes(dice)) {
+          state.member[i].debuffs.splice(diceIndex, 1);
         }
       });
     },
@@ -136,13 +152,31 @@ export const partySlice = createSlice({
       const { players } = action.payload;
       state.member = players;
     },
-    chainPlayer: (state, action: PayloadAction<{ target: number }>) => {
-      const { target } = action.payload;
-      state.member[target].isChained = true;
+    updatePlayerButtonStatus: (
+      state,
+      action: PayloadAction<{
+        index: number;
+        isChained: boolean;
+        isNumbered: boolean;
+      }>,
+    ) => {
+      const { index, isChained, isNumbered } = action.payload;
+      state.member[index].isChained = isChained;
+      state.member[index].isNumbered = isNumbered;
+      if (isChained) {
+        state.chainedIndexes.push(index);
+      }
     },
-    unChainPlayer: (state, action: PayloadAction<{ target: number }>) => {
-      const { target } = action.payload;
-      state.member[target].isChained = false;
+
+    resetChainPlayer: (state) => {
+      state.chainedIndexes = [];
+      state.member = state.member.map((n) => {
+        return {
+          ...n,
+          isChained: false,
+          isNumbered: false,
+        };
+      });
     },
     addMultipleDebuffs: (
       state,
@@ -167,8 +201,9 @@ export const {
   removeDebuff,
   removeAllHellwallDebuffs,
   removeDiceHellwallDebuffs,
-  chainPlayer,
-  unChainPlayer,
+  removeDiceDebuffs,
+  updatePlayerButtonStatus,
+  resetChainPlayer,
   resetPlayer,
 } = partySlice.actions;
 

@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../../redux/store';
-import { resetPlayer } from '../../redux/slices/playerSlice';
+import {
+  Player,
+  resetChainPlayer,
+  updatePlayerButtonStatus,
+} from '../../redux/slices/playerSlice';
 
 const Container = styled.div`
   display: flex;
@@ -39,50 +43,45 @@ const MarkContainer = styled.div`
 
 type MarkProps = {
   index: number;
-  status: ButtonStatus[];
-  setStatus?: any;
+  player: Player;
 };
 
 type TButton = 'chain' | 'number';
 
-const Mark = ({ index, status, setStatus }: MarkProps) => {
+const Mark = ({ index, player }: MarkProps) => {
+  const dispatch = useDispatch();
   const chainIconSrc = `/macroIcons/${
-    status[index].number || status[index].chain ? 'disable' : 'chain'
+    player.isNumbered || player.isChained ? 'disable' : 'chain'
   }Marker.png`;
   const numberIconSrc = `/macroIcons/${
-    status[index].number || status[index].chain ? 'disable' : 'number'
+    player.isNumbered || player.isChained ? 'disable' : 'number'
   }Marker.png`;
-
-  const onClickHandler = (clickBtnType: TButton, index?: number) => {
-    const newStatus = status.map((n, i) => {
-      const temp = { ...n };
-      if (i === index) {
-        temp[clickBtnType] = !n[clickBtnType];
-      } else {
-        temp[clickBtnType] = n[clickBtnType];
-      }
-      return temp;
-    });
-
-    if (clickBtnType === 'chain' && index) {
-      newStatus[index].chainNum = newStatus.filter((n) => n.chain).length;
-    }
-    setStatus(newStatus);
+  const isButtonDisabled = player.isNumbered || player.isChained;
+  const onClickHandler = (clickBtnType: TButton, index: number) => {
+    dispatch(
+      updatePlayerButtonStatus({
+        index: index,
+        isChained: clickBtnType === 'chain',
+        isNumbered: clickBtnType === 'number',
+      }),
+    );
   };
 
   return (
     <MarkContainer>
       <Button
         onClick={() => onClickHandler('chain', index)}
-        isClicked={status[index].chain}
+        isClicked={player.isChained}
         color="purple"
+        disabled={isButtonDisabled}
       >
         <img width="30px" src={chainIconSrc} />
       </Button>
       <Button
         onClick={() => onClickHandler('number', index)}
-        isClicked={status[index].number}
+        isClicked={player.isNumbered}
         color="lightyellow"
+        disabled={isButtonDisabled}
       >
         <img width="30px" src={numberIconSrc} />
       </Button>
@@ -101,55 +100,28 @@ const ResetMark = ({ resetHandler }) => {
   );
 };
 
-interface ButtonStatus {
-  chainNum: number;
-  chain: boolean;
-  number: boolean;
-}
-const initialButtonStatus = [
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-  { chainNum: 0, chain: false, number: false },
-];
-
 const Macros = () => {
   const dispatch = useDispatch();
   const { member } = useSelector((state: RootState) => state.party);
-  const [buttonStatus, setButtonStatus] = useState(initialButtonStatus);
 
-  const resetHandler = () => {
-    setButtonStatus(initialButtonStatus);
+  const buttonResetHandler = () => {
+    dispatch(resetChainPlayer());
   };
-
-  useEffect(() => {
-    const temp = member.map((n, i) => ({
-      ...n,
-      isChained: buttonStatus[i].chain,
-      chainNumber: buttonStatus[i].chainNum,
-    }));
-    dispatch(resetPlayer({ players: temp }));
-  }, [buttonStatus]);
 
   return (
     <Container>
       <Marks>
-        {buttonStatus &&
-          buttonStatus.map((status, i) => {
+        {member &&
+          member.map((player, i) => {
             return (
               <Mark
-                key={`macro_${i}_${status.chain}`}
+                key={`macro_${i}_${player.name}`}
                 index={i}
-                status={buttonStatus}
-                setStatus={setButtonStatus}
+                player={player}
               />
             );
           })}
-        <ResetMark resetHandler={resetHandler} />
+        <ResetMark resetHandler={buttonResetHandler} />
       </Marks>
     </Container>
   );

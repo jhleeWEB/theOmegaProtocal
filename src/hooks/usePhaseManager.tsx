@@ -28,7 +28,10 @@ const usePhaseManager = () => {
   const [sigmaHellwallTimeLeft, sigmaHellwallCountdown] = useCountDown(10000);
   const [omega1TimeLeft, omega1Countdown] = useCountDown(2000);
   const [omega1HellwallTimeLeft, omega1HellwallCountdown] = useCountDown(10000);
+  const [omega2TimeLeft, omega2Countdown] = useCountDown(2000);
+  const [omega2HellwallTimeLeft, omega2HellwallCountdown] = useCountDown(10000);
 
+  //Delta
   useEffect(() => {
     if (deltaTimeLeft <= 0 && phaseStatus === 'delta') {
       debuffGenerator.applyHellwall('delta');
@@ -45,6 +48,7 @@ const usePhaseManager = () => {
     }
   }, [deltaHellwallTimeLeft, phaseStatus]);
 
+  //Sigma
   useEffect(() => {
     if (sigmaTimeLeft <= 0 && phaseStatus === 'sigma') {
       debuffGenerator.applyHellwall('sigma');
@@ -59,6 +63,7 @@ const usePhaseManager = () => {
     }
   }, [sigmaHellwallTimeLeft, phaseStatus]);
 
+  //Omega1
   useEffect(() => {
     if (omega1TimeLeft <= 0 && phaseStatus === 'omega1') {
       debuffGenerator.applyHellwall('omega1');
@@ -69,9 +74,23 @@ const usePhaseManager = () => {
 
   useEffect(() => {
     if (omega1HellwallTimeLeft <= 0 && phaseStatus === 'omega1Hellwall') {
-      debuffGenerator.applyDynamis('omega1');
+      debuffGenerator.applyOmegaDynamis('omega1');
     }
   }, [omega1HellwallTimeLeft, phaseStatus]);
+
+  //Omega2
+  useEffect(() => {
+    if (omega2TimeLeft <= 0 && phaseStatus === 'omega2') {
+      setPhaseStatus('omega2Hellwall');
+      omega2HellwallCountdown.start();
+    }
+  }, [omega2TimeLeft, phaseStatus]);
+
+  useEffect(() => {
+    if (omega2HellwallTimeLeft <= 0 && phaseStatus === 'omega2Hellwall') {
+      debuffGenerator.applyOmegaDynamis('omega2');
+    }
+  }, [omega2HellwallTimeLeft, phaseStatus]);
 
   const startDeltaPhase = () => {
     setPhaseStatus('delta');
@@ -84,6 +103,10 @@ const usePhaseManager = () => {
   const startOmega1Phase = () => {
     setPhaseStatus('omega1');
     omega1Countdown.start();
+  };
+  const startOmega2Phase = () => {
+    setPhaseStatus('omega2');
+    omega2Countdown.start();
   };
 
   // const startSigmaPhase = () => {
@@ -140,10 +163,13 @@ const usePhaseManager = () => {
       sigmaHellwallTimeLeft,
       omega1TimeLeft,
       omega1HellwallTimeLeft,
+      omega2TimeLeft,
+      omega2HellwallTimeLeft,
     },
     startDeltaPhase,
     startSigmaPhase,
     startOmega1Phase,
+    startOmega2Phase,
     // startSigmaPhase,
     // startOmega1Phase,
     // startOmega2Phase,
