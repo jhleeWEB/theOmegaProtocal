@@ -16,10 +16,6 @@ const PartyContainer = styled.div`
   display: flex;
 `;
 
-const PhaseCountdownTimerContainer = styled.div`
-  display: flex;
-`;
-
 const ControlButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,7 +23,6 @@ const ControlButtonContainer = styled.div`
 `;
 
 export default function Sigma() {
-  const { simulation, party } = useSelector((state: RootState) => state);
   const phaseManager = usePhaseManager();
 
   const onClickDelta = () => {

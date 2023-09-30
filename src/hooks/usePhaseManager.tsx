@@ -1,6 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { nextPhase } from '../redux/slices/simulationSlice';
 import useDebuffGenerator from './useDebuffGenerator';
 import { useEffect, useState } from 'react';
 import useCountDown from 'react-countdown-hook';
@@ -17,10 +14,7 @@ type TPhaseStatus =
   | 'omega2Hellwall';
 
 const usePhaseManager = () => {
-  const dispatch = useDispatch();
-  const { simulation, party } = useSelector((state: RootState) => state);
   const debuffGenerator = useDebuffGenerator();
-  const { removeHellwall } = debuffGenerator;
   const [phaseStatus, setPhaseStatus] = useState<TPhaseStatus>('idle');
   const [deltaTimeLeft, deltaCountdown] = useCountDown(2000);
   const [deltaHellwallTimeLeft, deltaHellwallCountdown] = useCountDown(2000);
@@ -109,52 +103,6 @@ const usePhaseManager = () => {
     omega2Countdown.start();
   };
 
-  // const startSigmaPhase = () => {
-  //   const { applyHellwall } = debuffGenerator;
-  //   applyHellwall(name, 2000).then(() => endSigmaPhase(10000));
-  // };
-  // const startOmega1Phase = () => {
-  //   const { applyHellwall } = debuffGenerator;
-  //   applyHellwall(name, 2000)
-  //     .then(() => endOmega1Phase(10000))
-  //     .catch((e) => console.log(e));
-  // };
-  // const startOmega2Phase = () => {};
-
-  // const endDeltaPhase = (delay = 0) => {
-  //   const { applySigmaDynamis } = debuffGenerator;
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       removeHellwall();
-  //       applySigmaDynamis();
-  //       dispatch(nextPhase());
-  //       resolve('resolve');
-  //     }, delay);
-  //   });
-  // };
-  // const endSigmaPhase = (delay = 0) => {
-  //   const { applyOmega1Dynamis } = debuffGenerator;
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       removeHellwall();
-  //       applyOmega1Dynamis(2000);
-  //       dispatch(nextPhase());
-  //       resolve('resolve');
-  //     }, delay);
-  //   });
-  // };
-  // const endOmega1Phase = (delay = 0) => {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       removeHellwall();
-  //       dispatch(nextPhase());
-  //       resolve('resolve');
-  //     }, delay);
-  //   });
-  // };
-  // const endOmega2Phase = () => {
-  //   dispatch(nextPhase());
-  // };
   return {
     timer: {
       deltaTimeLeft,
@@ -170,13 +118,6 @@ const usePhaseManager = () => {
     startSigmaPhase,
     startOmega1Phase,
     startOmega2Phase,
-    // startSigmaPhase,
-    // startOmega1Phase,
-    // startOmega2Phase,
-    // endDeltaPhase,
-    // endOmega1Phase,
-    // endOmega2Phase,
-    // endSigmaPhase,
   };
 };
 
