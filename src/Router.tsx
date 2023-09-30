@@ -5,7 +5,7 @@ import Home from './routes/Home';
 export default function Router() {
   return (
     <Switch>
-      <Route path="/home" component={Home} />
+      <Route path="/" component={Home} />
     </Switch>
   );
 }

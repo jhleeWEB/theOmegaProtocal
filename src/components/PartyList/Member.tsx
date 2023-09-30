@@ -59,7 +59,7 @@ const Member = ({ memberInfos }: Props) => {
                 <img
                   width="16px"
                   height="16px"
-                  src={`/partyIcons/${i + 1}.png`}
+                  src={`theProtocalOmega/partyIcons/${i + 1}.png`}
                 />
                 <Name>레벨 90 {name}</Name>
               </NameContainer>
