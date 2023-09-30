@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/theOmegaProtocal/precache-manifest.69e5bea0107ae5e669a07bc36f53838e.js"
+  "/theOmegaProtocal/precache-manifest.f37b83438e9969993d15dc48943d20b1.js"
 );
 
 self.addEventListener('message', (event) => {
