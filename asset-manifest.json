@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.js": "/theProtocalOmega/static/js/main.379335dd.chunk.js",
+    "main.js.map": "/theProtocalOmega/static/js/main.379335dd.chunk.js.map",
+    "runtime-main.js": "/theProtocalOmega/static/js/runtime-main.aefab7ec.js",
+    "runtime-main.js.map": "/theProtocalOmega/static/js/runtime-main.aefab7ec.js.map",
+    "static/css/2.352a0142.chunk.css": "/theProtocalOmega/static/css/2.352a0142.chunk.css",
+    "static/js/2.4a84b86a.chunk.js": "/theProtocalOmega/static/js/2.4a84b86a.chunk.js",
+    "static/js/2.4a84b86a.chunk.js.map": "/theProtocalOmega/static/js/2.4a84b86a.chunk.js.map",
+    "index.html": "/theProtocalOmega/index.html",
+    "precache-manifest.120c0a95b6f2aeee63d5f2569182223b.js": "/theProtocalOmega/precache-manifest.120c0a95b6f2aeee63d5f2569182223b.js",
+    "service-worker.js": "/theProtocalOmega/service-worker.js",
+    "static/css/2.352a0142.chunk.css.map": "/theProtocalOmega/static/css/2.352a0142.chunk.css.map",
+    "static/js/2.4a84b86a.chunk.js.LICENSE.txt": "/theProtocalOmega/static/js/2.4a84b86a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aefab7ec.js",
+    "static/css/2.352a0142.chunk.css",
+    "static/js/2.4a84b86a.chunk.js",
+    "static/js/main.379335dd.chunk.js"
+  ]
+}
