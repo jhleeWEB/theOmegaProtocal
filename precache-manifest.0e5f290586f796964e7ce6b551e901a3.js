@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "40a5c7bdd9c9d40acb032a818deb7229",
+    "revision": "4f05f927c179d34f6175c6a54865302f",
     "url": "/theOmegaProtocal/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/theOmegaProtocal/static/js/2.f49cbbf4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "3bf70af783993d5fc603",
-    "url": "/theOmegaProtocal/static/js/main.f9dde54d.chunk.js"
+    "revision": "31b2cec0fea418e99dbb",
+    "url": "/theOmegaProtocal/static/js/main.cd6ac354.chunk.js"
   },
   {
     "revision": "941add3a48ea763eb9f6",
