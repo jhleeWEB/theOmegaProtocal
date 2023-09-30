@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import usePhaseManager from '../hooks/usePhaseManager';
+import usePhaseManager, { phaseInitalTimes } from '../hooks/usePhaseManager';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 const Container = styled.div`
   position: absolute;
@@ -14,8 +15,24 @@ const TimerContainer = styled.div`
 `;
 
 const Timer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+const Time = styled.div`
+  text-align: center;
   font-weight: bold;
-  font-size: 34px;
+  font-size: 120px;
+`;
+const Prefix = styled.div`
+  text-align: center;
+  font-weight: bold;
+  font-size: 32px;
+`;
+const Suffix = styled.div`
+  text-align: center;
+  font-weight: bold;
+  font-size: 32px;
 `;
 const PhaseName = styled.div`
   font-weight: bold;
@@ -36,6 +53,7 @@ interface Props {
 }
 
 const PhaseTimers = ({ timer }: Props) => {
+  const { delta, sigma, omega1, omega2 } = phaseInitalTimes;
   const showDeltaTimer = timer.deltaTimeLeft > 0;
   const showDeltaHellwallTimer = timer.deltaHellwallTimeLeft > 0;
   const showSigmaTimer = timer.sigmaTimeLeft > 0;
@@ -47,34 +65,165 @@ const PhaseTimers = ({ timer }: Props) => {
   return (
     <Container>
       <TimerContainer>
-        <PhaseName>타이머</PhaseName>
         {showDeltaTimer && (
-          <Timer>헬월 시작 {timer.deltaTimeLeft / 1000}초 전</Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={delta.start / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>헬로월드 부여</Prefix>
+                  <Time>{timer.deltaTimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showDeltaHellwallTimer && (
-          <Timer>뒤나미스 부여 {timer.deltaHellwallTimeLeft / 1000}초 전</Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={delta.end / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>뒤나미스 시전</Prefix>
+                  <Time>{timer.deltaHellwallTimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showSigmaTimer && (
-          <Timer>헬월 시작 {timer.sigmaTimeLeft / 1000}초 전</Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={sigma.start / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>헬로월드 시전</Prefix>
+                  <Time>{timer.sigmaTimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showSigmaHellwallTimer && (
-          <Timer>뒤나미스 부여 {timer.sigmaHellwallTimeLeft / 1000}초 전</Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={sigma.end / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>뒤나미스 시전</Prefix>
+                  <Time>{timer.sigmaHellwallTimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showOmega1Timer && (
-          <Timer>헬월 시작 {timer.omega1TimeLeft / 1000}초 전</Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={omega1.start / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>헬로월드 시전</Prefix>
+                  <Time>{timer.omega1TimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showOmega1HellwallTimer && (
-          <Timer>
-            뒤나미스 부여 {timer.omega1HellwallTimeLeft / 1000}초 전
-          </Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={omega1.end / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>뒤나미스 시전</Prefix>
+                  <Time>{timer.omega1HellwallTimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showOmega2Timer && (
-          <Timer>헬월 시작 {timer.omega2TimeLeft / 1000}초 전</Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={omega2.start / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>헬로월드 시전</Prefix>
+                  <Time>{timer.omega2TimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
         {showOmega2HellwallTimer && (
-          <Timer>
-            뒤나미스 부여 {timer.omega2HellwallTimeLeft / 1000}초 전
-          </Timer>
+          <CountdownCircleTimer
+            isPlaying
+            duration={omega2.end / 1000}
+            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+            colorsTime={[7, 5, 2, 0]}
+            strokeWidth={50}
+            size={500}
+          >
+            {({ remainingTime }) => {
+              return (
+                <Timer>
+                  <Prefix>뒤나미스 시전</Prefix>
+                  <Time>{timer.omega2HellwallTimeLeft / 1000}</Time>
+                  <Suffix>초</Suffix>
+                </Timer>
+              );
+            }}
+          </CountdownCircleTimer>
         )}
       </TimerContainer>
     </Container>
