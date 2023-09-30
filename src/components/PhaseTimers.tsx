@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import usePhaseManager, { phaseInitalTimes } from '../hooks/usePhaseManager';
+import usePhaseManager, {
+  TSimulationResult,
+  phaseInitalTimes,
+} from '../hooks/usePhaseManager';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 const Container = styled.div`
@@ -34,9 +37,11 @@ const Suffix = styled.div`
   font-weight: bold;
   font-size: 32px;
 `;
-const PhaseName = styled.div`
+const Result = styled.div<{ simulationResult: TSimulationResult }>`
+  text-align: center;
+  font-size: 80px;
   font-weight: bold;
-  font-size: 34px;
+  color: ${(props) => (props.simulationResult === '성공' ? 'green' : 'red')};
 `;
 
 interface Props {
@@ -50,9 +55,10 @@ interface Props {
     omega2TimeLeft: number;
     omega2HellwallTimeLeft: number;
   };
+  simulationResult: TSimulationResult;
 }
 
-const PhaseTimers = ({ timer }: Props) => {
+const PhaseTimers = ({ timer, simulationResult }: Props) => {
   const { delta, sigma, omega1, omega2 } = phaseInitalTimes;
   const showDeltaTimer = timer.deltaTimeLeft > 0;
   const showDeltaHellwallTimer = timer.deltaHellwallTimeLeft > 0;
@@ -65,6 +71,16 @@ const PhaseTimers = ({ timer }: Props) => {
   return (
     <Container>
       <TimerContainer>
+        {simulationResult === '성공' && (
+          <Result simulationResult={simulationResult}>
+            {simulationResult}!!!
+          </Result>
+        )}
+        {simulationResult === '실패' && (
+          <Result simulationResult={simulationResult}>
+            {simulationResult}...
+          </Result>
+        )}
         {showDeltaTimer && (
           <CountdownCircleTimer
             isPlaying

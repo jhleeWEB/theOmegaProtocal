@@ -15,7 +15,8 @@ type TPhaseStatus =
   | 'omega1'
   | 'omega1Hellwall'
   | 'omega2'
-  | 'omega2Hellwall';
+  | 'omega2Hellwall'
+  | 'end';
 
 export const phaseInitalTimes = {
   delta: {
@@ -36,11 +37,15 @@ export const phaseInitalTimes = {
   },
 };
 
+export type TSimulationResult = '평가중' | '성공' | '실패';
+
 const usePhaseManager = () => {
   const { delta, sigma, omega1, omega2 } = phaseInitalTimes;
+  const { party } = useSelector((state: RootState) => state);
   const debuffGenerator = useDebuffGenerator();
-  const validator = useValidator();
   const [phaseStatus, setPhaseStatus] = useState<TPhaseStatus>('idle');
+  const [simulationResult, setSimulationResult] =
+    useState<TSimulationResult>('평가중');
   const [deltaTimeLeft, deltaCountdown] = useCountDown(delta.start);
   const [deltaHellwallTimeLeft, deltaHellwallCountdown] = useCountDown(
     delta.end,
@@ -120,8 +125,17 @@ const usePhaseManager = () => {
   useEffect(() => {
     if (omega2HellwallTimeLeft <= 0 && phaseStatus === 'omega2Hellwall') {
       debuffGenerator.applyOmegaDynamis('omega2');
+      setPhaseStatus('end');
     }
   }, [omega2HellwallTimeLeft, phaseStatus]);
+
+  useEffect(() => {
+    if (phaseStatus === 'end') {
+      const isSuccess =
+        party.member.filter((n) => n.debuffs.length === 3).length === 8;
+      setSimulationResult(isSuccess ? '성공' : '실패');
+    }
+  }, [phaseStatus]);
 
   const startDeltaPhase = () => {
     setPhaseStatus('delta');
@@ -151,6 +165,7 @@ const usePhaseManager = () => {
       omega2TimeLeft,
       omega2HellwallTimeLeft,
     },
+    simulationResult,
     startDeltaPhase,
     startSigmaPhase,
     startOmega1Phase,

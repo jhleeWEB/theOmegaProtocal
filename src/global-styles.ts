@@ -10,12 +10,19 @@ export const GlobalStyle = createGlobalStyle<IThemeInterface>`
     box-sizing: border-box;
   }
 
+  #root{
+    height:100%;
+  }
+  
+
   body{
+    padding: 30px;
     font-family: 'Nanum Gothic', sans-serif;
     font-size: ${fontSize.normalFontSize};
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
-    
+    height: 100%;
+    width:100%;
     transition: background 0.5s ease-in-out;
     transition: color 0.5s ease-in-out;
 
