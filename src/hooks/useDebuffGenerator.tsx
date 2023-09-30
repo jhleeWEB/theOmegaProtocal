@@ -19,12 +19,6 @@ const getDynamisTargetPlayers = (
   fullPlayers: Player[],
   phase: TPhase,
 ) => {
-  console.log(phase);
-  console.log(chainedIndexes);
-  console.log(
-    'players',
-    fullPlayers.map((n) => n.name),
-  );
   const excludedPlayers = chainedIndexes.map((n, i) => {
     if (phase === 'sigma') {
       return (i === 0 || i === 2) && fullPlayers[n].name;
@@ -34,8 +28,6 @@ const getDynamisTargetPlayers = (
       return 'not included';
     }
   });
-
-  console.log('excluded', excludedPlayers);
   return players.filter((n) => !excludedPlayers.includes(n.name));
 };
 
@@ -179,10 +171,6 @@ const useDebuffGenerator = () => {
     const targetPlayers = generateRandomHellWall(member, phase).map((n) => {
       return { ...n, debuffs: [] };
     }) as Player[];
-    console.log(
-      'hellwall',
-      targetPlayers.map((n) => n.name),
-    );
     const debuffedPlayers = targetPlayers.map((n, i) => {
       const debuffs = [i % 2 === 0 ? 'hellwallFar' : 'hellwallNear'];
       if (phase === 'omega1') {
