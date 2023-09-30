@@ -35,7 +35,7 @@ export default function App() {
         autoClose={5000}
         pauseOnHover={true}
       />
-      <BrowserRouter>
+      <BrowserRouter basename="/theOmegaProtocal">
         <ScrollToTop>
           <BackTop />
           <Router />

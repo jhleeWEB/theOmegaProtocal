@@ -50,10 +50,10 @@ type TButton = 'chain' | 'number';
 
 const Mark = ({ index, player }: MarkProps) => {
   const dispatch = useDispatch();
-  const chainIconSrc = `theProtocalOmega/macroIcons/${
+  const chainIconSrc = `./theOmegaProtocal/macroIcons/${
     player.isNumbered || player.isChained ? 'disable' : 'chain'
   }Marker.png`;
-  const numberIconSrc = `theProtocalOmega/macroIcons/${
+  const numberIconSrc = `./theOmegaProtocal/macroIcons/${
     player.isNumbered || player.isChained ? 'disable' : 'number'
   }Marker.png`;
   const isButtonDisabled = player.isNumbered || player.isChained;
@@ -90,7 +90,7 @@ const Mark = ({ index, player }: MarkProps) => {
 };
 
 const ResetMark = ({ resetHandler }) => {
-  const resetIconSrc = `theProtocalOmega/macroIcons/resetMarker.png`;
+  const resetIconSrc = `./theOmegaProtocal/macroIcons/resetMarker.png`;
   return (
     <MarkContainer>
       <Button onClick={resetHandler} isClicked={false} color="blue">

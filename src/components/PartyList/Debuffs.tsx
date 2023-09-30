@@ -18,13 +18,13 @@ interface Props {
 
 const Debuffs = ({ debuffs }: Props) => {
   const stacked = getStackedDebuffs(debuffs);
-  const dynamisSrc = `theProtocalOmega/debuffIcons/dynamis${
+  const dynamisSrc = `./theOmegaProtocal/debuffIcons/dynamis${
     stacked['dynamis'] ? stacked['dynamis'] : ''
   }.png`;
-  const dice1Src = `theProtocalOmega/debuffIcons/dice1.png`;
-  const dice2Src = `theProtocalOmega/debuffIcons/dice2.png`;
-  const hellWallNearSrc = `theProtocalOmega/debuffIcons/hellwall_near.png`;
-  const hellWallFarSrc = `theProtocalOmega/debuffIcons/hellwall_far.png`;
+  const dice1Src = `./theOmegaProtocal/debuffIcons/dice1.png`;
+  const dice2Src = `./theOmegaProtocal/debuffIcons/dice2.png`;
+  const hellWallNearSrc = `./theOmegaProtocal/debuffIcons/hellwall_near.png`;
+  const hellWallFarSrc = `./theOmegaProtocal/debuffIcons/hellwall_far.png`;
   return (
     <Container>
       {stacked['dynamis'] > 0 && <img width="30px" src={dynamisSrc} />}
