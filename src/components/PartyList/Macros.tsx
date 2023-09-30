@@ -7,6 +7,7 @@ import {
   resetChainPlayer,
   updatePlayerButtonStatus,
 } from '../../redux/slices/playerSlice';
+import { PUBLIC_URL } from '../../env';
 
 const Container = styled.div`
   display: flex;
@@ -50,10 +51,10 @@ type TButton = 'chain' | 'number';
 
 const Mark = ({ index, player }: MarkProps) => {
   const dispatch = useDispatch();
-  const chainIconSrc = `./theOmegaProtocal/macroIcons/${
+  const chainIconSrc = `${PUBLIC_URL}/macroIcons/${
     player.isNumbered || player.isChained ? 'disable' : 'chain'
   }Marker.png`;
-  const numberIconSrc = `./theOmegaProtocal/macroIcons/${
+  const numberIconSrc = `${PUBLIC_URL}/macroIcons/${
     player.isNumbered || player.isChained ? 'disable' : 'number'
   }Marker.png`;
   const isButtonDisabled = player.isNumbered || player.isChained;
@@ -90,7 +91,7 @@ const Mark = ({ index, player }: MarkProps) => {
 };
 
 const ResetMark = ({ resetHandler }) => {
-  const resetIconSrc = `./theOmegaProtocal/macroIcons/resetMarker.png`;
+  const resetIconSrc = `${PUBLIC_URL}/macroIcons/resetMarker.png`;
   return (
     <MarkContainer>
       <Button onClick={resetHandler} isClicked={false} color="blue">

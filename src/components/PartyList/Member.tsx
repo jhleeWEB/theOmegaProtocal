@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Player } from '../../redux/slices/playerSlice';
 import Debuffs from './Debuffs';
 import JobIcon from './JobIcon';
+import { PUBLIC_URL } from '../../env';
 
 const Container = styled.div`
   display: flex;
@@ -59,7 +60,7 @@ const Member = ({ memberInfos }: Props) => {
                 <img
                   width="16px"
                   height="16px"
-                  src={`./theOmegaProtocal/partyIcons/${i + 1}.png`}
+                  src={`${PUBLIC_URL}/partyIcons/${i + 1}.png`}
                 />
                 <Name>레벨 90 {name}</Name>
               </NameContainer>

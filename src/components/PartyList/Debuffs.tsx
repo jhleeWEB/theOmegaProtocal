@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Debuff } from '../../redux/slices/playerSlice';
+import { PUBLIC_URL } from '../../env';
 
 const Container = styled.div``;
 
@@ -18,13 +19,13 @@ interface Props {
 
 const Debuffs = ({ debuffs }: Props) => {
   const stacked = getStackedDebuffs(debuffs);
-  const dynamisSrc = `./theOmegaProtocal/debuffIcons/dynamis${
+  const dynamisSrc = `${PUBLIC_URL}/debuffIcons/dynamis${
     stacked['dynamis'] ? stacked['dynamis'] : ''
   }.png`;
-  const dice1Src = `./theOmegaProtocal/debuffIcons/dice1.png`;
-  const dice2Src = `./theOmegaProtocal/debuffIcons/dice2.png`;
-  const hellWallNearSrc = `./theOmegaProtocal/debuffIcons/hellwall_near.png`;
-  const hellWallFarSrc = `./theOmegaProtocal/debuffIcons/hellwall_far.png`;
+  const dice1Src = `${PUBLIC_URL}/debuffIcons/dice1.png`;
+  const dice2Src = `${PUBLIC_URL}/debuffIcons/dice2.png`;
+  const hellWallNearSrc = `${PUBLIC_URL}/debuffIcons/hellwall_near.png`;
+  const hellWallFarSrc = `${PUBLIC_URL}/debuffIcons/hellwall_far.png`;
   return (
     <Container>
       {stacked['dynamis'] > 0 && <img width="30px" src={dynamisSrc} />}

@@ -21,19 +21,19 @@ type TPhaseStatus =
 export const phaseInitalTimes = {
   delta: {
     start: 10000,
-    end: 5000,
+    end: 2000,
   },
   sigma: {
     start: 10000,
-    end: 5000,
+    end: 2000,
   },
   omega1: {
     start: 10000,
-    end: 5000,
+    end: 2000,
   },
   omega2: {
-    start: 10000,
-    end: 5000,
+    start: 1000,
+    end: 2000,
   },
 };
 
