@@ -1,6 +1,10 @@
 import useDebuffGenerator from './useDebuffGenerator';
 import { useEffect, useState } from 'react';
 import useCountDown from 'react-countdown-hook';
+import useValidator from './useValidator';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateAfter, updateBefore } from '../redux/slices/simulationSlice';
+import { RootState } from '../redux/store';
 
 type TPhaseStatus =
   | 'idle'
@@ -14,7 +18,10 @@ type TPhaseStatus =
   | 'omega2Hellwall';
 
 const usePhaseManager = () => {
+  const dispatch = useDispatch();
   const debuffGenerator = useDebuffGenerator();
+
+  const validator = useValidator();
   const [phaseStatus, setPhaseStatus] = useState<TPhaseStatus>('idle');
   const [deltaTimeLeft, deltaCountdown] = useCountDown(2000);
   const [deltaHellwallTimeLeft, deltaHellwallCountdown] = useCountDown(2000);
@@ -54,6 +61,7 @@ const usePhaseManager = () => {
   useEffect(() => {
     if (sigmaHellwallTimeLeft <= 0 && phaseStatus === 'sigmaHellwall') {
       debuffGenerator.applyDynamis('sigma');
+      validator.validateSigma();
     }
   }, [sigmaHellwallTimeLeft, phaseStatus]);
 
