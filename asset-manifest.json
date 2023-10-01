@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/theOmegaProtocal/static/js/main.cd6ac354.chunk.js",
-    "main.js.map": "/theOmegaProtocal/static/js/main.cd6ac354.chunk.js.map",
+    "main.js": "/theOmegaProtocal/static/js/main.21cff833.chunk.js",
+    "main.js.map": "/theOmegaProtocal/static/js/main.21cff833.chunk.js.map",
     "runtime-main.js": "/theOmegaProtocal/static/js/runtime-main.c153046d.js",
     "runtime-main.js.map": "/theOmegaProtocal/static/js/runtime-main.c153046d.js.map",
     "static/css/2.352a0142.chunk.css": "/theOmegaProtocal/static/css/2.352a0142.chunk.css",
-    "static/js/2.f49cbbf4.chunk.js": "/theOmegaProtocal/static/js/2.f49cbbf4.chunk.js",
-    "static/js/2.f49cbbf4.chunk.js.map": "/theOmegaProtocal/static/js/2.f49cbbf4.chunk.js.map",
+    "static/js/2.e99e709a.chunk.js": "/theOmegaProtocal/static/js/2.e99e709a.chunk.js",
+    "static/js/2.e99e709a.chunk.js.map": "/theOmegaProtocal/static/js/2.e99e709a.chunk.js.map",
     "index.html": "/theOmegaProtocal/index.html",
-    "precache-manifest.0e5f290586f796964e7ce6b551e901a3.js": "/theOmegaProtocal/precache-manifest.0e5f290586f796964e7ce6b551e901a3.js",
+    "precache-manifest.290d9b853a455d04a5bf28bbe8621f4a.js": "/theOmegaProtocal/precache-manifest.290d9b853a455d04a5bf28bbe8621f4a.js",
     "service-worker.js": "/theOmegaProtocal/service-worker.js",
     "static/css/2.352a0142.chunk.css.map": "/theOmegaProtocal/static/css/2.352a0142.chunk.css.map",
-    "static/js/2.f49cbbf4.chunk.js.LICENSE.txt": "/theOmegaProtocal/static/js/2.f49cbbf4.chunk.js.LICENSE.txt"
+    "static/js/2.e99e709a.chunk.js.LICENSE.txt": "/theOmegaProtocal/static/js/2.e99e709a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c153046d.js",
     "static/css/2.352a0142.chunk.css",
-    "static/js/2.f49cbbf4.chunk.js",
-    "static/js/main.cd6ac354.chunk.js"
+    "static/js/2.e99e709a.chunk.js",
+    "static/js/main.21cff833.chunk.js"
   ]
 }
