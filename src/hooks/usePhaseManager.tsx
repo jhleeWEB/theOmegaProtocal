@@ -21,19 +21,23 @@ type TPhaseStatus =
 export const phaseInitalTimes = {
   delta: {
     start: 10000,
-    end: 2000,
+    end: 3500,
   },
   sigma: {
+    tether: {
+      start: 1000,
+      end: 2000,
+    },
     start: 10000,
-    end: 2000,
+    end: 4000,
   },
   omega1: {
     start: 10000,
-    end: 2000,
+    end: 3500,
   },
   omega2: {
-    start: 1000,
-    end: 2000,
+    start: 2000,
+    end: 3500,
   },
 };
 
@@ -49,6 +53,12 @@ const usePhaseManager = () => {
   const [deltaTimeLeft, deltaCountdown] = useCountDown(delta.start);
   const [deltaHellwallTimeLeft, deltaHellwallCountdown] = useCountDown(
     delta.end,
+  );
+  const [sigmaTetherStartTimeLeft, sigmaTetherStartCountdown] = useCountDown(
+    sigma.tether.start,
+  );
+  const [sigmaTetherEndTimeLeft, sigmaTetherEndCountdown] = useCountDown(
+    sigma.tether.end,
   );
   const [sigmaTimeLeft, sigmaCountdown] = useCountDown(sigma.start);
   const [sigmaHellwallTimeLeft, sigmaHellwallCountdown] = useCountDown(
@@ -86,8 +96,22 @@ const usePhaseManager = () => {
       debuffGenerator.applyHellwall('sigma');
       setPhaseStatus('sigmaHellwall');
       sigmaHellwallCountdown.start();
+      sigmaTetherStartCountdown.start();
     }
   }, [sigmaTimeLeft, phaseStatus]);
+
+  useEffect(() => {
+    if (sigmaTetherStartTimeLeft <= 0 && phaseStatus === 'sigmaHellwall') {
+      debuffGenerator.applyPSTether();
+      sigmaTetherEndCountdown.start();
+    }
+  }, [sigmaTetherStartTimeLeft, phaseStatus]);
+
+  useEffect(() => {
+    if (sigmaTetherEndTimeLeft <= 0 && phaseStatus === 'sigmaHellwall') {
+      debuffGenerator.removeTether();
+    }
+  }, [sigmaTetherEndTimeLeft, phaseStatus]);
 
   useEffect(() => {
     if (sigmaHellwallTimeLeft <= 0 && phaseStatus === 'sigmaHellwall') {

@@ -6,7 +6,12 @@ export type Debuff =
   | 'hellwallFar'
   | 'hellwallNear'
   | 'dice1'
-  | 'dice2';
+  | 'dice2'
+  | 'ps_far'
+  | 'ps_near'
+  | 'line_green'
+  | 'line_blue'
+  | 'dmg_increase';
 
 export type Job = 'pld' | 'war' | 'wht' | 'sch' | 'nin' | 'rpr' | 'mch' | 'sum';
 
@@ -119,6 +124,28 @@ export const partySlice = createSlice({
         }
       });
     },
+    removeAllTetherDebuffs: (state) => {
+      state.member.forEach((n, i) => {
+        const hellwallFarIndex = state.member[i].debuffs.indexOf('ps_far');
+        const hellwallNearIndex = state.member[i].debuffs.indexOf('ps_near');
+        if (n.debuffs.includes('ps_far')) {
+          state.member[i].debuffs.splice(hellwallFarIndex, 1);
+        }
+        if (n.debuffs.includes('ps_near')) {
+          state.member[i].debuffs.splice(hellwallNearIndex, 1);
+        }
+      });
+    },
+    removeAllDamageIncreaseDebuffs: (state) => {
+      state.member.forEach((n, i) => {
+        const dmgIncreaseIndex =
+          state.member[i].debuffs.indexOf('dmg_increase');
+
+        if (n.debuffs.includes('dmg_increase')) {
+          state.member[i].debuffs.splice(dmgIncreaseIndex, 1);
+        }
+      });
+    },
     removeDiceHellwallDebuffs: (
       state,
       action: PayloadAction<{ dice: 'dice1' | 'dice2' }>,
@@ -200,6 +227,8 @@ export const {
   addMultipleDebuffs,
   removeDebuff,
   removeAllHellwallDebuffs,
+  removeAllTetherDebuffs,
+  removeAllDamageIncreaseDebuffs,
   removeDiceHellwallDebuffs,
   removeDiceDebuffs,
   updatePlayerButtonStatus,

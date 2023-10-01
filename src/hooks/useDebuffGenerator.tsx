@@ -5,7 +5,9 @@ import {
   Player,
   addDebuff,
   addMultipleDebuffs,
+  removeAllDamageIncreaseDebuffs,
   removeAllHellwallDebuffs,
+  removeAllTetherDebuffs,
   removeDiceDebuffs,
   removeDiceHellwallDebuffs,
 } from '../redux/slices/playerSlice';
@@ -124,6 +126,28 @@ const useDebuffGenerator = () => {
     };
   };
 
+  const applyPSTether = () => {
+    const chooser = randomNoRepeats(['ps_far', 'ps_near']);
+    const psType = chooser();
+    const targets = member.map((n) => {
+      return {
+        ...n,
+        debuffs: [psType, 'dmg_increase'],
+      };
+    });
+    dispatch(addMultipleDebuffs({ targetPlayers: targets }));
+  };
+
+  const applyDamageIncrease = () => {
+    const targets = member.map((n) => {
+      return {
+        ...n,
+        debuffs: ['dmg_increase'],
+      };
+    });
+    dispatch(addMultipleDebuffs({ targetPlayers: targets as Player[] }));
+  };
+
   const applyDynamis = (phase: TPhase) => {
     const debuffedPlayers = generateRandomDynamis(phase).map((n) => {
       return {
@@ -188,12 +212,21 @@ const useDebuffGenerator = () => {
   const removeHellwall = () => {
     dispatch(removeAllHellwallDebuffs());
   };
+  const removeTether = () => {
+    batch(() => {
+      dispatch(removeAllTetherDebuffs());
+      dispatch(removeAllDamageIncreaseDebuffs());
+    });
+  };
 
   return {
     applyHellwall,
     applyDynamis,
+    applyDamageIncrease,
+    applyPSTether,
     applyOmegaDynamis,
     removeHellwall,
+    removeTether,
   };
 };
 
