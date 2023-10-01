@@ -20,24 +20,24 @@ type TPhaseStatus =
 
 export const phaseInitalTimes = {
   delta: {
-    start: 10000,
-    end: 3500,
+    start: 5000,
+    end: 3000,
   },
   sigma: {
     tether: {
       start: 1000,
-      end: 2000,
+      end: 4000,
     },
     start: 10000,
-    end: 4000,
+    end: 6000,
   },
   omega1: {
     start: 10000,
-    end: 3500,
+    end: 4000,
   },
   omega2: {
     start: 2000,
-    end: 3500,
+    end: 4000,
   },
 };
 

@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Debuff } from '../../redux/slices/playerSlice';
 import { PUBLIC_URL } from '../../env';
-import { nanoid } from '@reduxjs/toolkit';
 
-const Container = styled.div``;
+const Container = styled.div`
+  overflow: hidden;
+  max-width: 150px;
+  max-height: 40px;
+`;
 
 const getStackedDebuffs = (debuffs: Debuff[]) => {
   const stacked = debuffs.reduce(function (prev, curr) {
@@ -27,6 +30,10 @@ const Debuffs = ({ debuffs }: Props) => {
     `${PUBLIC_URL}/buffIcons/sge_buff2.png`,
     `${PUBLIC_URL}/buffIcons/war_buff.png`,
     `${PUBLIC_URL}/buffIcons/whm_buff.png`,
+    `${PUBLIC_URL}/buffIcons/distraction_1.png`,
+    `${PUBLIC_URL}/buffIcons/distraction_2.png`,
+    `${PUBLIC_URL}/buffIcons/distraction_3.png`,
+    `${PUBLIC_URL}/buffIcons/distraction_4.png`,
   ]);
   const dynamisSrc = `${PUBLIC_URL}/debuffIcons/dynamis${
     stacked['dynamis'] ? stacked['dynamis'] : ''
@@ -42,7 +49,7 @@ const Debuffs = ({ debuffs }: Props) => {
   useEffect(() => {
     setInterval(() => {
       setBuffSrcs((prevState) => prevState.sort(() => Math.random() - 0.5));
-    }, 4000);
+    }, 2000);
   }, []);
 
   return (
