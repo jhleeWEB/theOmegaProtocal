@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Debuff } from '../../redux/slices/playerSlice';
 import { PUBLIC_URL } from '../../env';
+import { nanoid } from '@reduxjs/toolkit';
 
 const Container = styled.div``;
 
@@ -19,6 +20,14 @@ interface Props {
 
 const Debuffs = ({ debuffs }: Props) => {
   const stacked = getStackedDebuffs(debuffs);
+  const [buffSrcs, setBuffSrcs] = useState<string[]>([
+    `${PUBLIC_URL}/buffIcons/heal1.png`,
+    `${PUBLIC_URL}/buffIcons/heal2.png`,
+    `${PUBLIC_URL}/buffIcons/sge_buff.png`,
+    `${PUBLIC_URL}/buffIcons/sge_buff2.png`,
+    `${PUBLIC_URL}/buffIcons/war_buff.png`,
+    `${PUBLIC_URL}/buffIcons/whm_buff.png`,
+  ]);
   const dynamisSrc = `${PUBLIC_URL}/debuffIcons/dynamis${
     stacked['dynamis'] ? stacked['dynamis'] : ''
   }.png`;
@@ -29,6 +38,13 @@ const Debuffs = ({ debuffs }: Props) => {
   const psFarSrc = `${PUBLIC_URL}/debuffIcons/ps_far.png`;
   const psNearSrc = `${PUBLIC_URL}/debuffIcons/ps_near.png`;
   const damageIncreaseSrc = `${PUBLIC_URL}/debuffIcons/dmg_increase.png`;
+
+  useEffect(() => {
+    setInterval(() => {
+      setBuffSrcs((prevState) => prevState.sort(() => Math.random() - 0.5));
+    }, 4000);
+  }, []);
+
   return (
     <Container>
       {stacked['dynamis'] > 0 && <img width="30px" src={dynamisSrc} />}
@@ -43,6 +59,9 @@ const Debuffs = ({ debuffs }: Props) => {
       )}
       {stacked['dice1'] > 0 && <img width="30px" src={dice1Src} />}
       {stacked['dice2'] > 0 && <img width="30px" src={dice2Src} />}
+      {buffSrcs.map((n) => (
+        <img width="30px" src={n} />
+      ))}
     </Container>
   );
 };
