@@ -48,6 +48,8 @@ const Debuffs = ({ debuffs }: Props) => {
   return (
     <Container>
       {stacked['dynamis'] > 0 && <img width="30px" src={dynamisSrc} />}
+      {stacked['dice1'] > 0 && <img width="30px" src={dice1Src} />}
+      {stacked['dice2'] > 0 && <img width="30px" src={dice2Src} />}
       {stacked['hellwallNear'] > 0 && (
         <img width="30px" src={hellWallNearSrc} />
       )}
@@ -57,8 +59,6 @@ const Debuffs = ({ debuffs }: Props) => {
       {stacked['dmg_increase'] > 0 && (
         <img width="30px" src={damageIncreaseSrc} />
       )}
-      {stacked['dice1'] > 0 && <img width="30px" src={dice1Src} />}
-      {stacked['dice2'] > 0 && <img width="30px" src={dice2Src} />}
       {buffSrcs.map((n) => (
         <img width="30px" src={n} />
       ))}
